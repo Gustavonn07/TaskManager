@@ -11,19 +11,43 @@ tm::Task::Task(
                              description(description),
                              progress(progress) {};
 
-void tm::Task::setTitle(const std::string &title)
+bool tm::Task::setTitle(const std::string &title)
 {
-  this->title = title;
+  try
+  {
+    this->title = title;
+    return true;
+  }
+  catch (const std::exception &_)
+  {
+    return false;
+  }
 }
 
-void tm::Task::setDescription(const std::string &description)
+bool tm::Task::setDescription(const std::string &description)
 {
-  this->description = description;
+  try
+  {
+    this->description = description;
+    return true;
+  }
+  catch (const std::exception &_)
+  {
+    return false;
+  }
 }
 
-void tm::Task::setProgress(TaskProgress progress)
+bool tm::Task::setProgress(TaskProgress progress)
 {
-  this->progress = progress;
+  try
+  {
+    this->progress = progress;
+    return true;
+  }
+  catch (const std::exception &_)
+  {
+    return false;
+  }
 }
 
 std::string tm::Task::getId() const
