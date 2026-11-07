@@ -5,6 +5,7 @@
 #include <string>
 
 #include "Task.h"
+#include "ErrorType.h"
 
 namespace tsm
 {
@@ -17,20 +18,20 @@ namespace tsm
   public:
     TaskManager();
 
-    bool addTask(
+    tsm::ErrorType addTask(
         const std::string &id,
         const std::string &title,
         const std::string &description);
 
-    bool removeTask(const std::string &id);
+    tsm::ErrorType removeTask(const std::string &id);
 
-    bool editTask(const std::string &id,
+    tsm::ErrorType editTask(const std::string &id,
                   const std::string &title,
                   const std::string &description);
 
-    bool updateTaskProgress(const std::string &id);
+    tsm::ErrorType updateTaskProgress(const std::string &id);
 
-    bool cancelTask(const std::string &id);
+    tsm::ErrorType cancelTask(const std::string &id);
 
     const tsm::Task *findTask(const std::string &id) const;
     tsm::Task *findTask(const std::string &id);

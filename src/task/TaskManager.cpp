@@ -5,18 +5,16 @@
 
 #include "Task.h"
 
-// TODO: UMA FORMA MELHOR DE MAPEAR OS ERROS COM UM ENUM DE ERROS
-
 tsm::TaskManager::TaskManager() {}
 
-bool tsm::TaskManager::addTask(
+tsm::ErrorType tsm::TaskManager::addTask(
     const std::string &id,
     const std::string &title,
     const std::string &description)
 {
   if (this->findTask(id) != nullptr)
   {
-    return false;
+    return tsm::ErrorType::FILE_NOT_FOUND;
   }
 
   tsm::Task new_task(
@@ -26,20 +24,25 @@ bool tsm::TaskManager::addTask(
       tsm::TaskProgress::TO_DO);
 
   tsm::TaskManager::tasks.push_back(std::move(new_task));
-  return true;
+  return tsm::ErrorType::SUCCESS;
 }
 
-bool tsm::TaskManager::removeTask(const std::string &id)
+tsm::ErrorType tsm::TaskManager::removeTask(const std::string &id)
 {
-  return std::erase_if(
-             tasks,
-             [&id](const tsm::Task &task)
-             {
-               return task.getId() == id;
-             }) > 0;
+  if (std::erase_if(
+          tasks,
+          [&id](const tsm::Task &task)
+          {
+            return task.getId() == id;
+          }) > 0)
+  {
+    return tsm::ErrorType::SUCCESS;
+  }
+
+  return tsm::ErrorType::FILE_NOT_FOUND;
 }
 
-bool tsm::TaskManager::editTask(
+tsm::ErrorType tsm::TaskManager::editTask(
     const std::string &id,
     const std::string &title,
     const std::string &description)
@@ -56,12 +59,12 @@ bool tsm::TaskManager::editTask(
     {
       task->setDescription(description);
     }
-    return true;
+    return tsm::ErrorType::SUCCESS;
   }
-  return false;
+  return tsm::ErrorType::FILE_NOT_FOUND;
 }
 
-bool tsm::TaskManager::updateTaskProgress(const std::string &id)
+tsm::ErrorType tsm::TaskManager::updateTaskProgress(const std::string &id)
 {
   tsm::Task *task = this->findTask(id);
 
@@ -71,20 +74,20 @@ bool tsm::TaskManager::updateTaskProgress(const std::string &id)
     {
     case tsm::TaskProgress::TO_DO:
       task->setProgress(tsm::TaskProgress::IN_PROGRESS);
-      return true;
+      return tsm::ErrorType::SUCCESS;
 
     case tsm::TaskProgress::IN_PROGRESS:
       task->setProgress(tsm::TaskProgress::CONCLUDED);
-      return true;
+      return tsm::ErrorType::SUCCESS;
 
     default:
-      return false;
+      return tsm::ErrorType::TASK_INVALID_TRANSITION;
     }
   }
-  return false;
+  return tsm::ErrorType::FILE_NOT_FOUND;
 }
 
-bool tsm::TaskManager::cancelTask(const std::string &id)
+tsm::ErrorType tsm::TaskManager::cancelTask(const std::string &id)
 {
   tsm::Task *task = this->findTask(id);
 
@@ -92,13 +95,13 @@ bool tsm::TaskManager::cancelTask(const std::string &id)
   {
     if (task->getProgress() == tsm::TaskProgress::CANCELLED)
     {
-      return false;
+      return tsm::ErrorType::TASK_ALREADY_CANCELLED;
     }
 
     task->setProgress(tsm::TaskProgress::CANCELLED);
-    return true;
+    return tsm::ErrorType::SUCCESS;
   }
-  return false;
+  return tsm::ErrorType::FILE_NOT_FOUND;
 }
 
 const tsm::Task *tsm::TaskManager::findTask(const std::string &id) const

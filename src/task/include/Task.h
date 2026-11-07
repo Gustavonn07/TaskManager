@@ -3,6 +3,8 @@
 
 #include <string>
 
+#include "ErrorType.h"
+
 namespace tsm
 {
 
@@ -32,9 +34,9 @@ namespace tsm
         // User user;
         tsm::TaskProgress progress);
 
-    bool setTitle(const std::string &title);
-    bool setDescription(const std::string &description);
-    bool setProgress(TaskProgress progress);
+    tsm::ErrorType setTitle(const std::string &title);
+    tsm::ErrorType setDescription(const std::string &description);
+    tsm::ErrorType setProgress(TaskProgress progress);
 
     std::string getId() const;
     std::string getTitle() const;
