@@ -2,68 +2,46 @@
 
 #include <string>
 #include <vector>
-#include <algorithm>
+#include <stdexcept>
 
 #include "include/task/Task.h"
 
 // TODO: UMA FORMA MELHOR DE MAPEAR OS ERROS COM UM ENUM DE ERROS
 // TODO: CRIAR UMA FUNÇÃO DE VERIFICAR SE A TASK REALMENTE EXISTE POR ID (PRIVATE)
 
-tm::TaskManager::TaskManager() {};
-
-std::vector<tm::Task> tm::TaskManager::tasks{};
+tm::TaskManager::TaskManager() {}
 
 bool tm::TaskManager::addTask(
     const std::string &id,
     const std::string &title,
     const std::string &description)
 {
-  try
+  for (const tm::Task &task : tm::TaskManager::tasks)
   {
-    for (tm::Task task : tm::TaskManager::tasks)
+    if (task.getId() == id)
     {
-      if (task.getId() == id)
-      {
-        return false;
-      }
+      return false;
     }
-
-    tm::Task new_task = tm::Task(
-        id,
-        title,
-        description,
-        tm::TaskProgress::TO_DO);
-
-    tm::TaskManager::tasks.push_back(new_task);
-    return true;
   }
-  catch (const std::exception &_)
-  {
-    return false;
-  }
+
+  tm::Task new_task = tm::Task(
+      id,
+      title,
+      description,
+      tm::TaskProgress::TO_DO);
+
+  tm::TaskManager::tasks.push_back(new_task);
+  return true;
 }
 
 bool tm::TaskManager::removeTask(const std::string &id)
 {
-  try
-  {
-    for (tm::Task task : tm::TaskManager::tasks)
-    {
-      if (task.getId() == id)
-      {
-        std::erase_if(
-            tm::TaskManager::tasks, [id](const tm::Task &t)
-            { t.getId() == id; });
-
-        return true;
-      }
-    }
-    return false;
-  }
-  catch (const std::exception &_)
-  {
-    return false;
-  }
+  return std::erase_if(
+             tasks,
+             [&id](const tm::Task &task)
+             {
+               return task.getId() == id;
+             }) > 0;
 }
 
 bool tm::TaskManager::editTask(
@@ -71,15 +49,10 @@ bool tm::TaskManager::editTask(
     const std::string &title,
     const std::string &description)
 {
-  try
+  for (tm::Task &task : tm::TaskManager::tasks)
   {
-    for (tm::Task task : tm::TaskManager::tasks)
+    if (task.getId() == id)
     {
-      if (task.getId() != id)
-      {
-        return false;
-      }
-
       if (task.getTitle() != title)
       {
         task.setTitle(title);
@@ -88,84 +61,64 @@ bool tm::TaskManager::editTask(
       {
         task.setDescription(description);
       }
-
       return true;
     }
-
-    return false;
   }
-  catch (const std::exception &_)
-  {
-    return false;
-  }
+  return false;
 }
 
 bool tm::TaskManager::updateTaskProgress(const std::string &id)
 {
-  try
+  for (tm::Task &task : tm::TaskManager::tasks)
   {
-    for (tm::Task task : tm::TaskManager::tasks)
+    if (task.getId() == id)
     {
-      if (task.getId() == id)
+      switch (task.getProgress())
       {
-        switch (task.getProgress())
-        {
-        case tm::TaskProgress::TO_DO:
-          task.setProgress(tm::TaskProgress::IN_PROGRESS);
-          return true;
+      case tm::TaskProgress::TO_DO:
+        task.setProgress(tm::TaskProgress::IN_PROGRESS);
+        return true;
 
-        case tm::TaskProgress::IN_PROGRESS:
-          task.setProgress(tm::TaskProgress::CONCLUDED);
-          return true;
+      case tm::TaskProgress::IN_PROGRESS:
+        task.setProgress(tm::TaskProgress::CONCLUDED);
+        return true;
 
-        default:
-          return false;
-        }
+      default:
+        return false;
       }
     }
-    return false;
   }
-  catch (const std::exception &_)
-  {
-    return false;
-  }
+  return false;
 }
 
 bool tm::TaskManager::cancelTask(const std::string &id)
 {
-  try
-  {
-    for (tm::Task task : tm::TaskManager::tasks)
-    {
-      if (task.getId() == id)
-      {
-        if (task.getProgress() == tm::TaskProgress::CANCELLED)
-        {
-          return false;
-        }
-
-        task.setProgress(tm::TaskProgress::CANCELLED);
-        return true;
-      }
-    }
-    return false;
-  }
-  catch (const std::exception &_)
-  {
-    return false;
-  }
-}
-
-const tm::Task &tm::TaskManager::findTask(const std::string &id) const
-{
-  for (tm::Task task : tm::TaskManager::tasks)
+  for (tm::Task &task : tm::TaskManager::tasks)
   {
     if (task.getId() == id)
     {
-      return task;
+      if (task.getProgress() == tm::TaskProgress::CANCELLED)
+      {
+        return false;
+      }
+
+      task.setProgress(tm::TaskProgress::CANCELLED);
+      return true;
     }
-    // TODO: FAZER O ELSE PARA RETORNAR OUTRO VALOR (NULLPTR?)
   }
+  return false;
+}
+
+const tm::Task *tm::TaskManager::findTask(const std::string &id) const
+{
+  for (const tm::Task &task : tm::TaskManager::tasks)
+  {
+    if (task.getId() == id)
+    {
+      return &task;
+    }
+  }
+  return nullptr;
 }
 
 const std::vector<tm::Task> &tm::TaskManager::getAllTasks() const
@@ -173,11 +126,11 @@ const std::vector<tm::Task> &tm::TaskManager::getAllTasks() const
   return tm::TaskManager::tasks;
 }
 
-const std::vector<tm::Task> tm::TaskManager::getTaskByProgress(const tm::TaskProgress progress) const
+std::vector<tm::Task> tm::TaskManager::getTaskByProgress(const tm::TaskProgress progress) const
 {
   std::vector<tm::Task> tasks_by_progress{};
 
-  for (tm::Task task : tm::TaskManager::tasks)
+  for (const tm::Task &task : tasks)
   {
     if (task.getProgress() == progress)
     {

@@ -12,7 +12,7 @@ namespace tm
   class TaskManager
   {
   private:
-    static std::vector<tm::Task> tasks;
+    std::vector<tm::Task> tasks;
 
   public:
     TaskManager();
@@ -32,11 +32,11 @@ namespace tm
 
     bool cancelTask(const std::string &id);
 
-    const tm::Task &findTask(const std::string &id) const;
+    const tm::Task *findTask(const std::string &id) const;
 
     const std::vector<tm::Task> &getAllTasks() const;
 
-    const std::vector<tm::Task> getTaskByProgress(const tm::TaskProgress progress) const;
+    std::vector<tm::Task> getTaskByProgress(const tm::TaskProgress progress) const;
   };
 
 } // namespace tm
