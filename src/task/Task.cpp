@@ -1,8 +1,8 @@
+#include "Task.h"
+
 #include <string>
 
-#include "include/task/Task.h"
-
-tm::Task::Task(
+tsm::Task::Task(
     const std::string &id,
     const std::string &title,
     const std::string &description,
@@ -11,7 +11,7 @@ tm::Task::Task(
                              description(description),
                              progress(progress) {};
 
-bool tm::Task::setTitle(const std::string &title)
+bool tsm::Task::setTitle(const std::string &title)
 {
   try
   {
@@ -24,7 +24,7 @@ bool tm::Task::setTitle(const std::string &title)
   }
 }
 
-bool tm::Task::setDescription(const std::string &description)
+bool tsm::Task::setDescription(const std::string &description)
 {
   try
   {
@@ -37,7 +37,7 @@ bool tm::Task::setDescription(const std::string &description)
   }
 }
 
-bool tm::Task::setProgress(TaskProgress progress)
+bool tsm::Task::setProgress(TaskProgress progress)
 {
   try
   {
@@ -50,22 +50,22 @@ bool tm::Task::setProgress(TaskProgress progress)
   }
 }
 
-std::string tm::Task::getId() const
+std::string tsm::Task::getId() const
 {
   return this->id;
 };
 
-std::string tm::Task::getTitle() const
+std::string tsm::Task::getTitle() const
 {
   return this->title;
 }
 
-std::string tm::Task::getDescription() const
+std::string tsm::Task::getDescription() const
 {
   return this->description;
 }
 
-tm::TaskProgress tm::Task::getProgress() const
+tsm::TaskProgress tsm::Task::getProgress() const
 {
   return this->progress;
 }

@@ -3,13 +3,13 @@
 #include <string>
 #include <vector>
 
-#include "include/task/Task.h"
+#include "Task.h"
 
 // TODO: UMA FORMA MELHOR DE MAPEAR OS ERROS COM UM ENUM DE ERROS
 
-tm::TaskManager::TaskManager() {}
+tsm::TaskManager::TaskManager() {}
 
-bool tm::TaskManager::addTask(
+bool tsm::TaskManager::addTask(
     const std::string &id,
     const std::string &title,
     const std::string &description)
@@ -19,32 +19,32 @@ bool tm::TaskManager::addTask(
     return false;
   }
 
-  tm::Task new_task(
+  tsm::Task new_task(
       id,
       title,
       description,
-      tm::TaskProgress::TO_DO);
+      tsm::TaskProgress::TO_DO);
 
-  tm::TaskManager::tasks.push_back(std::move(new_task));
+  tsm::TaskManager::tasks.push_back(std::move(new_task));
   return true;
 }
 
-bool tm::TaskManager::removeTask(const std::string &id)
+bool tsm::TaskManager::removeTask(const std::string &id)
 {
   return std::erase_if(
              tasks,
-             [&id](const tm::Task &task)
+             [&id](const tsm::Task &task)
              {
                return task.getId() == id;
              }) > 0;
 }
 
-bool tm::TaskManager::editTask(
+bool tsm::TaskManager::editTask(
     const std::string &id,
     const std::string &title,
     const std::string &description)
 {
-  tm::Task *task = this->findTask(id);
+  tsm::Task *task = this->findTask(id);
 
   if (task != nullptr)
   {
@@ -61,20 +61,20 @@ bool tm::TaskManager::editTask(
   return false;
 }
 
-bool tm::TaskManager::updateTaskProgress(const std::string &id)
+bool tsm::TaskManager::updateTaskProgress(const std::string &id)
 {
-  tm::Task *task = this->findTask(id);
+  tsm::Task *task = this->findTask(id);
 
   if (task)
   {
     switch (task->getProgress())
     {
-    case tm::TaskProgress::TO_DO:
-      task->setProgress(tm::TaskProgress::IN_PROGRESS);
+    case tsm::TaskProgress::TO_DO:
+      task->setProgress(tsm::TaskProgress::IN_PROGRESS);
       return true;
 
-    case tm::TaskProgress::IN_PROGRESS:
-      task->setProgress(tm::TaskProgress::CONCLUDED);
+    case tsm::TaskProgress::IN_PROGRESS:
+      task->setProgress(tsm::TaskProgress::CONCLUDED);
       return true;
 
     default:
@@ -84,26 +84,26 @@ bool tm::TaskManager::updateTaskProgress(const std::string &id)
   return false;
 }
 
-bool tm::TaskManager::cancelTask(const std::string &id)
+bool tsm::TaskManager::cancelTask(const std::string &id)
 {
-  tm::Task *task = this->findTask(id);
+  tsm::Task *task = this->findTask(id);
 
   if (task)
   {
-    if (task->getProgress() == tm::TaskProgress::CANCELLED)
+    if (task->getProgress() == tsm::TaskProgress::CANCELLED)
     {
       return false;
     }
 
-    task->setProgress(tm::TaskProgress::CANCELLED);
+    task->setProgress(tsm::TaskProgress::CANCELLED);
     return true;
   }
   return false;
 }
 
-const tm::Task *tm::TaskManager::findTask(const std::string &id) const
+const tsm::Task *tsm::TaskManager::findTask(const std::string &id) const
 {
-  for (const tm::Task &task : tm::TaskManager::tasks)
+  for (const tsm::Task &task : tsm::TaskManager::tasks)
   {
     if (task.getId() == id)
     {
@@ -113,9 +113,9 @@ const tm::Task *tm::TaskManager::findTask(const std::string &id) const
   return nullptr;
 }
 
-tm::Task *tm::TaskManager::findTask(const std::string &id)
+tsm::Task *tsm::TaskManager::findTask(const std::string &id)
 {
-  for (tm::Task &task : tm::TaskManager::tasks)
+  for (tsm::Task &task : tsm::TaskManager::tasks)
   {
     if (task.getId() == id)
     {
@@ -125,16 +125,16 @@ tm::Task *tm::TaskManager::findTask(const std::string &id)
   return nullptr;
 }
 
-const std::vector<tm::Task> &tm::TaskManager::getAllTasks() const
+const std::vector<tsm::Task> &tsm::TaskManager::getAllTasks() const
 {
-  return tm::TaskManager::tasks;
+  return tsm::TaskManager::tasks;
 }
 
-std::vector<tm::Task> tm::TaskManager::getTaskByProgress(const tm::TaskProgress progress) const
+std::vector<tsm::Task> tsm::TaskManager::getTaskByProgress(const tsm::TaskProgress progress) const
 {
-  std::vector<tm::Task> tasks_by_progress{};
+  std::vector<tsm::Task> tasks_by_progress{};
 
-  for (const tm::Task &task : tasks)
+  for (const tsm::Task &task : tasks)
   {
     if (task.getProgress() == progress)
     {

@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace tm
+namespace tsm
 {
 
   enum class TaskProgress
@@ -30,7 +30,7 @@ namespace tm
 
         // TODO: ADICIONAR USUARIO DA TASK.
         // User user;
-        tm::TaskProgress progress);
+        tsm::TaskProgress progress);
 
     bool setTitle(const std::string &title);
     bool setDescription(const std::string &description);

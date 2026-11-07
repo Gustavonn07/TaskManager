@@ -4,15 +4,15 @@
 #include <vector>
 #include <string>
 
-#include "include/task/Task.h"
+#include "Task.h"
 
-namespace tm
+namespace tsm
 {
 
   class TaskManager
   {
   private:
-    std::vector<tm::Task> tasks;
+    std::vector<tsm::Task> tasks;
 
   public:
     TaskManager();
@@ -32,12 +32,12 @@ namespace tm
 
     bool cancelTask(const std::string &id);
 
-    const tm::Task *findTask(const std::string &id) const;
-    tm::Task *findTask(const std::string &id);
+    const tsm::Task *findTask(const std::string &id) const;
+    tsm::Task *findTask(const std::string &id);
 
-    const std::vector<tm::Task> &getAllTasks() const;
+    const std::vector<tsm::Task> &getAllTasks() const;
 
-    std::vector<tm::Task> getTaskByProgress(const tm::TaskProgress progress) const;
+    std::vector<tsm::Task> getTaskByProgress(const tsm::TaskProgress progress) const;
   };
 
 } // namespace tm
