@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include "ErrorType.h"
+
 tsm::Task::Task(
     const std::string &id,
     const std::string &title,
@@ -11,42 +13,42 @@ tsm::Task::Task(
                              description(description),
                              progress(progress) {};
 
-bool tsm::Task::setTitle(const std::string &title)
+tsm::ErrorType tsm::Task::setTitle(const std::string &title)
 {
   try
   {
     this->title = title;
-    return true;
+    return tsm::ErrorType::SUCCESS;
   }
   catch (const std::exception &_)
   {
-    return false;
+    return tsm::ErrorType::UNKNOWN;
   }
 }
 
-bool tsm::Task::setDescription(const std::string &description)
+tsm::ErrorType tsm::Task::setDescription(const std::string &description)
 {
   try
   {
     this->description = description;
-    return true;
+    return tsm::ErrorType::SUCCESS;
   }
   catch (const std::exception &_)
   {
-    return false;
+    return tsm::ErrorType::UNKNOWN;
   }
 }
 
-bool tsm::Task::setProgress(TaskProgress progress)
+tsm::ErrorType tsm::Task::setProgress(TaskProgress progress)
 {
   try
   {
     this->progress = progress;
-    return true;
+    return tsm::ErrorType::SUCCESS;
   }
   catch (const std::exception &_)
   {
-    return false;
+    return tsm::ErrorType::UNKNOWN;
   }
 }
 

@@ -9,3 +9,8 @@ add_executable(TaskManager
 )
 
 target_compile_features(TaskManager PRIVATE cxx_std_20)
+
+target_link_libraries(TaskManager PRIVATE
+    TaskLib
+    UtilsLib
+)

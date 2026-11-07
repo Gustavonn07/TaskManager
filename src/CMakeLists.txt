@@ -1,4 +1,2 @@
-target_link_libraries(TaskManager PRIVATE
-  TaskLib
-  UtilsLib
-)
+add_subdirectory(task)
+add_subdirectory(utils)
