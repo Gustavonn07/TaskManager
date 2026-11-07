@@ -2,12 +2,10 @@
 
 #include <string>
 #include <vector>
-#include <stdexcept>
 
 #include "include/task/Task.h"
 
 // TODO: UMA FORMA MELHOR DE MAPEAR OS ERROS COM UM ENUM DE ERROS
-// TODO: CRIAR UMA FUNÇÃO DE VERIFICAR SE A TASK REALMENTE EXISTE POR ID (PRIVATE)
 
 tm::TaskManager::TaskManager() {}
 
@@ -16,21 +14,18 @@ bool tm::TaskManager::addTask(
     const std::string &title,
     const std::string &description)
 {
-  for (const tm::Task &task : tm::TaskManager::tasks)
+  if (this->findTask(id) != nullptr)
   {
-    if (task.getId() == id)
-    {
-      return false;
-    }
+    return false;
   }
 
-  tm::Task new_task = tm::Task(
+  tm::Task new_task(
       id,
       title,
       description,
       tm::TaskProgress::TO_DO);
 
-  tm::TaskManager::tasks.push_back(new_task);
+  tm::TaskManager::tasks.push_back(std::move(new_task));
   return true;
 }
 
@@ -49,43 +44,41 @@ bool tm::TaskManager::editTask(
     const std::string &title,
     const std::string &description)
 {
-  for (tm::Task &task : tm::TaskManager::tasks)
+  tm::Task *task = this->findTask(id);
+
+  if (task != nullptr)
   {
-    if (task.getId() == id)
+    if (task->getTitle() != title)
     {
-      if (task.getTitle() != title)
-      {
-        task.setTitle(title);
-      }
-      if (task.getDescription() != description)
-      {
-        task.setDescription(description);
-      }
-      return true;
+      task->setTitle(title);
     }
+    if (task->getDescription() != description)
+    {
+      task->setDescription(description);
+    }
+    return true;
   }
   return false;
 }
 
 bool tm::TaskManager::updateTaskProgress(const std::string &id)
 {
-  for (tm::Task &task : tm::TaskManager::tasks)
+  tm::Task *task = this->findTask(id);
+
+  if (task)
   {
-    if (task.getId() == id)
+    switch (task->getProgress())
     {
-      switch (task.getProgress())
-      {
-      case tm::TaskProgress::TO_DO:
-        task.setProgress(tm::TaskProgress::IN_PROGRESS);
-        return true;
+    case tm::TaskProgress::TO_DO:
+      task->setProgress(tm::TaskProgress::IN_PROGRESS);
+      return true;
 
-      case tm::TaskProgress::IN_PROGRESS:
-        task.setProgress(tm::TaskProgress::CONCLUDED);
-        return true;
+    case tm::TaskProgress::IN_PROGRESS:
+      task->setProgress(tm::TaskProgress::CONCLUDED);
+      return true;
 
-      default:
-        return false;
-      }
+    default:
+      return false;
     }
   }
   return false;
@@ -93,18 +86,17 @@ bool tm::TaskManager::updateTaskProgress(const std::string &id)
 
 bool tm::TaskManager::cancelTask(const std::string &id)
 {
-  for (tm::Task &task : tm::TaskManager::tasks)
-  {
-    if (task.getId() == id)
-    {
-      if (task.getProgress() == tm::TaskProgress::CANCELLED)
-      {
-        return false;
-      }
+  tm::Task *task = this->findTask(id);
 
-      task.setProgress(tm::TaskProgress::CANCELLED);
-      return true;
+  if (task)
+  {
+    if (task->getProgress() == tm::TaskProgress::CANCELLED)
+    {
+      return false;
     }
+
+    task->setProgress(tm::TaskProgress::CANCELLED);
+    return true;
   }
   return false;
 }
@@ -112,6 +104,18 @@ bool tm::TaskManager::cancelTask(const std::string &id)
 const tm::Task *tm::TaskManager::findTask(const std::string &id) const
 {
   for (const tm::Task &task : tm::TaskManager::tasks)
+  {
+    if (task.getId() == id)
+    {
+      return &task;
+    }
+  }
+  return nullptr;
+}
+
+tm::Task *tm::TaskManager::findTask(const std::string &id)
+{
+  for (tm::Task &task : tm::TaskManager::tasks)
   {
     if (task.getId() == id)
     {

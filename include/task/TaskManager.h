@@ -33,6 +33,7 @@ namespace tm
     bool cancelTask(const std::string &id);
 
     const tm::Task *findTask(const std::string &id) const;
+    tm::Task *findTask(const std::string &id);
 
     const std::vector<tm::Task> &getAllTasks() const;
 
