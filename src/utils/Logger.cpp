@@ -3,8 +3,6 @@
 #include <iostream>
 #include <string>
 
-tsm::Logger::Logger() {}
-
 std::string tsm::Logger::getLoggerLabel(LoggerType type)
 {
   switch (type)
