@@ -5,8 +5,6 @@
 
 #include "Task.h"
 
-// TODO: UMA FORMA MELHOR DE MAPEAR OS ERROS COM UM ENUM DE ERROS
-
 tsm::TaskManager::TaskManager() {}
 
 bool tsm::TaskManager::addTask(
